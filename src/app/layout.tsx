@@ -7,7 +7,8 @@ import antTheme from "@/theme/antTheme";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import { Toaster } from "sonner";
 // @ts-ignore: side-effect import without type declarations
-import 'yet-another-react-lightbox/styles.css';
+import "yet-another-react-lightbox/styles.css";
+import Providers from "@/lib/Provider";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -31,12 +32,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={plusJakartaSans.className}>
-        <AntdRegistry>
-          <ConfigProvider theme={antTheme}>
-            <Toaster position="top-center" />
-            {children}
-          </ConfigProvider>
-        </AntdRegistry>
+        <Providers>
+          <AntdRegistry>
+            <ConfigProvider theme={antTheme}>
+              <Toaster position="top-center" />
+              {children}
+            </ConfigProvider>
+          </AntdRegistry>
+        </Providers>
       </body>
     </html>
   );
