@@ -1,33 +1,3 @@
-export type TSection =
-  | "Dashboard"
-  | "Riders"
-  | "Drivers"
-  | "Ride Management"
-  | "Earning"
-  | "Fare management"
-  | "Voucher"
-  | "Promo code"
-  | "Notification Management"
-  | "Help & Support";
-
-export type TActivityLog = {
-  id: number;
-  action: string;
-  description: string;
-  dateTime: string;
-};
-
-export type TAdminStaff = {
-  key: number;
-  name: string;
-  phone: string;
-  email: string;
-  role: string;
-  joinDate: string;
-  avatar?: string;
-  sections: TSection[];
-  activityLog: TActivityLog[];
-};
 
 export interface Conversation {
   id: string;
@@ -61,4 +31,20 @@ export interface ChatThread {
   contact: ChatContact;
   dateLabel: string; // e.g. "JUNE 14, 2024"
   messages: ChatMessage[];
+}
+
+
+export type TStatus = "active" | "blocked";
+export interface IUser {
+  _id: string;
+  name: string;
+  email: string;
+  phoneNumber?: string;
+  location?: string;
+  company?: string;
+  bio?: string;
+  status: TStatus;
+  profile: string;
+  createdAt: string;
+
 }

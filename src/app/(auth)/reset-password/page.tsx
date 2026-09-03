@@ -1,25 +1,13 @@
-import { Metadata } from "next";
-import { ResetPasswordForm } from "@/components/(auth)/setNewPassword/ResetPasswordForm";
-import Image from "next/image";
-import resetPassImage from "@/assets/image/reset_pass_page_image.jpg";
+import AuthHeroBanner from "@/components/shared/AuthHeroBanner";
+import ResetPasswordForm from "./_components/ResetPassword";
 
-export const metadata: Metadata = {
-  title: "Reset Password",
-};
-
-const ResetPassword = () => {
-  return <div className="bg-[#F8F9FA] flex min-h-screen items-center justify-center gap-10 md:flex-row ">
-    <div className="flex-1">
-      <Image
-        src={resetPassImage} alt="Reset Password Page Image" className="h-screen object-cover w-full" />
+export default function ResetPasswordPage() {
+  return (
+    <div className="relative">
+      <AuthHeroBanner />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full mx-auto z-50">
+        <ResetPasswordForm />
+      </div>
     </div>
-    <div className="flex-1">
-      <ResetPasswordForm />
-    </div>
-  </div>
-
-
-    ;
-};
-
-export default ResetPassword;
+  );
+}

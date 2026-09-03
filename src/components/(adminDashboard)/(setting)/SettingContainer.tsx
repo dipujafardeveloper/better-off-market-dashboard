@@ -23,7 +23,7 @@ const links = [
   },
   {
     lable: "Terms & Condition",
-    path: "about-us",
+    path: "terms-condition",
   },
 ];
 

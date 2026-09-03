@@ -1,24 +1,20 @@
-import { LoginForm } from "@/components/(auth)/login/LoginForm";
-import { Metadata } from "next";
-import Image from "next/image";
-import loginPageImage from "@/assets/image/login_page_image.jpg"
+import AuthHeroBanner from "@/components/shared/AuthHeroBanner";
+import LoginForm from "./_components/LoginForm";
 
-export const metadata: Metadata = {
-  title: "Admin Login",
-  description: "Admin login for the dashboard.",
+export const metadata = {
+  title: "Login",
+  description: "This the official website of Better Off Market",
 };
 
-const LoginPage = () => {
+export default function page() {
   return (
-    <div className="bg-[#F8F9FA] flex min-h-screen items-center justify-center gap-10 md:flex-row ">
-      <div className="flex-1">
-      <Image src={loginPageImage} alt="Login Page Image" className="h-screen object-cover w-full" />
+    <>
+      <div className="relative">
+        <AuthHeroBanner />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full mx-auto z-50">
+          <LoginForm />
+        </div>
       </div>
-      <div  className="flex-1">
-        <LoginForm />
-      </div>
-    </div>
+    </>
   );
-};
-
-export default LoginPage;
+}

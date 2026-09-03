@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
-import logo from "@/assets/images/logo_blue.png";
+import logo from "@/assets/logo.png";
 import Image from "next/image";
 import { useAppDispatch } from "@/redux/hooks";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -15,7 +15,7 @@ import { jwtDecode } from "jwt-decode";
 import { useLoginMutation } from "@/redux/api/authApi";
 import { toast } from "sonner";
 import { errorModification } from "@/lib/errors/errorModification";
-import { LoaderIcon } from "@/icons";
+import { LoaderIcon } from "@/icon";
 
 // Zod validation schema
 const loginSchema = z.object({
@@ -54,15 +54,21 @@ export default function LoginForm() {
     try {
       const res = await login(data).unwrap();
 
+      if (res?.data?.user?.user?.role !== "admin") {
+        toast.error("You are not authenticated as admin.");
+        return;
+      }
+
       dispatch(
         setUser({
           user: jwtDecode(res?.data?.accessToken),
           token: res?.data?.accessToken,
         }),
       );
+
       toast.success("Login successful!");
       if (callbackUrl) router.replace(callbackUrl);
-      else router.push("/user/dashboard");
+      else router.push("/dashboard");
       setError(null);
     } catch (err: any) {
       const error = errorModification(err);
@@ -102,33 +108,6 @@ export default function LoginForm() {
       )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-        {/* User Type Dropdown */}
-        {/* <div>
-          <label
-            htmlFor="userType"
-            className="mb-2 block text-sm font-medium text-gray-900"
-          >
-            Select User
-          </label>
-          <div className="relative">
-            <select
-              id="userType"
-              {...register("userType")}
-              className="w-full appearance-none rounded-lg border border-[#3D3D3D] bg-white px-4 py-2.5 text-gray-900 placeholder-gray-400 transition focus:border-[#3D3D3D] focus:outline-none focus:ring-1 focus:ring-gray-400"
-            >
-              <option value="Buyer">Buyer</option>
-              <option value="Seller">Seller</option>
-            </select>
-            <ChevronDown className="pointer-events-none absolute right-3 top-3.5 h-5 w-5 text-gray-400" />
-          </div>
-          {errors.userType && (
-            <p className="mt-1 text-xs text-red-600">
-              {errors.userType.message}
-            </p>
-          )}
-        </div> */}
-
-        {/* Email Input */}
         <div>
           <label
             htmlFor="email"
@@ -203,29 +182,6 @@ export default function LoginForm() {
             className="text-sm font-medium text-[#2563EB] hover:text-blue-700"
           >
             Forgot Password?
-          </Link>
-        </div>
-
-        {/* Sign Up Link */}
-        <p className="mb-4 text-center text-sm text-gray-700">
-          Don&apos;t have Account?{" "}
-          <Link
-            href="/sign-up"
-            className="font-medium text-[#2563EB] hover:text-blue-700"
-          >
-            Sign Up
-          </Link>
-        </p>
-
-        {/* Continue without Sign In */}
-        <div>
-          <Link href="/">
-            <button
-              type="button"
-              className="w-full text-center  font-medium text-[#0095FF] hover:text-blue-700 cursor-pointer"
-            >
-              Continue without Sign In
-            </button>
           </Link>
         </div>
 

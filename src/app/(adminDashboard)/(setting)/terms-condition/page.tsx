@@ -3,9 +3,9 @@ import React from "react";
 
 const TermsConditions = () => {
   return (
-    <div>
-      <TermsConditionsEditor></TermsConditionsEditor>
-    </div>
+    <>
+      <TermsConditionsEditor/>
+    </>
   );
 };
 

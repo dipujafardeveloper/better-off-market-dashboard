@@ -3,9 +3,9 @@ import React from "react";
 
 const PrivacyPolicyPage = () => {
   return (
-    <div>
-      <PrivacyPolicyEditor></PrivacyPolicyEditor>
-    </div>
+    <>
+      <PrivacyPolicyEditor />
+    </>
   );
 };
 

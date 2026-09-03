@@ -15,6 +15,9 @@ import {
   MenubarTrigger,
 } from "../ui/menubar";
 import { FaBars } from "react-icons/fa6";
+import { useAppDispatch } from "@/redux/hooks";
+import { logout } from "@/redux/features/authSlice";
+import { useRouter } from "next/navigation";
 
 type TNavbarProps = {
   collapsed: boolean;
@@ -22,6 +25,8 @@ type TNavbarProps = {
 };
 
 const Navbar = ({ collapsed, setCollapsed }: TNavbarProps) => {
+  const dispatch = useAppDispatch();
+  const router = useRouter();
   return (
     <div className="flex items-center justify-between w-[97%]">
       {/* Header left side */}
@@ -39,7 +44,9 @@ const Navbar = ({ collapsed, setCollapsed }: TNavbarProps) => {
         <div className="flex-col px-4 hidden md:flex">
           <h2 className="md:text-xl text-lg  font-medium text-[#3A3C3B]">
             Welcome, Mitchell
-            <span className="block  text-xs font-normal">Welcome back! Here's what's happening today.</span>
+            <span className="block  text-xs font-normal">
+              Welcome back! Here's what's happening today.
+            </span>
           </h2>
         </div>
       </Flex>
@@ -67,7 +74,7 @@ const Navbar = ({ collapsed, setCollapsed }: TNavbarProps) => {
         </Link>
 
         <Menubar className="py-6 rounded-full">
-          <MenubarMenu >
+          <MenubarMenu>
             <MenubarTrigger className="shadow-none px-0 rounded-full py-2">
               <div className="flex items-center gap-x-2  px-2 h-fit">
                 <p className="text-black">Mitchell</p>
@@ -89,11 +96,16 @@ const Navbar = ({ collapsed, setCollapsed }: TNavbarProps) => {
                 </MenubarItem>
               </Link>
               <MenubarSeparator />
-              <Link href={"/login"}>
-                <MenubarItem className="hover:bg-gray-100 cursor-pointer">
-                  Logout
-                </MenubarItem>
-              </Link>
+
+              <MenubarItem
+                onClick={() => {
+                  dispatch(logout());
+                  router.refresh();
+                }}
+                className="hover:bg-gray-100 cursor-pointer"
+              >
+                Logout
+              </MenubarItem>
             </MenubarContent>
           </MenubarMenu>
         </Menubar>

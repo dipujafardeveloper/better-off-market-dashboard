@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 5005",
+    "dev": "next dev -p 3005",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -52,6 +52,7 @@
     "sonner": "^1.5.0",
     "tailwind-merge": "^3.0.1",
     "tailwindcss-animate": "^1.0.7",
+    "use-debounce": "^10.1.1",
     "xlsx": "^0.18.5",
     "yet-another-react-lightbox": "^3.32.2",
     "zod": "^4.1.7"

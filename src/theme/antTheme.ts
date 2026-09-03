@@ -21,7 +21,7 @@ const antTheme = {
       rowHoverBg: "var(--color-main-bg)",
     },
     Modal: {
-      colorIcon: "rgba(255,255,255,0.45)",
+      colorIcon: "rgba(255, 0, 0, 1)",
       contentBg: "var(--color-section-bg)",
       colorText: "var(--color-text-color)",
     },

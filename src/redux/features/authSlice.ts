@@ -13,20 +13,21 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state, action) => {
-      const { user, token, refreshToken } = action.payload;
+      const { user, token } = action.payload;
 
       state.user = user;
       state.token = token;
 
       // Store token in Cookies for middleware authentication
-      Cookies.set("betteroffmarket-access-token", token, {
+      Cookies.set("betteroffmarket-dashboard-access-token", token, {
         path: "/",
-        expires: 7,
+        expires: 30,
       });
 
-      Cookies.set("refreshToken", refreshToken, {
-        
-      })
+      // Cookies.set("betteroffmarket-dashboard-refreshToken", refreshToken, {
+      //   path: "/",
+      //   expires: 365,
+      // });
     },
 
     logout: (state) => {
@@ -34,8 +35,8 @@ const authSlice = createSlice({
       state.token = null;
 
       // Remove token from cookie
-      Cookies.remove("betteroffmarket-access-token", { path: "/" });
-      Cookies.remove("refreshToken", { path: "/" });
+      Cookies.remove("betteroffmarket-dashboard-access-token", { path: "/" });
+      // Cookies.remove("betteroffmarket-dashboard-refreshToken", { path: "/" });
     },
   },
 });

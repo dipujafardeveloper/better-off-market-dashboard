@@ -8,9 +8,6 @@ const DashboardPage = () => {
     <div className="lg:space-y-7 space-y-5 ">
       <StatContainer></StatContainer>
 
-      {/* <UserOverViewChart></UserOverViewChart>
-
-      <RecentAccountList></RecentAccountList> */}
       <div className="grid lg:grid-cols-3 gap-5">
         <div className="lg:col-span-2">
           <UserOverviewChart />

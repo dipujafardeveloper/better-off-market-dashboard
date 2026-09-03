@@ -8,7 +8,14 @@ const statsApi = baseApi.injectEndpoints({
         method: "GET",
       }),
     }),
+    getUserOverview: builder.query({
+      query: (params) => ({
+        url: "/stats/user-overview",
+        method: "GET",
+        params,
+      }),
+    }),
   }),
 });
 
-export const { useGetStatsQuery } = statsApi;
+export const { useGetStatsQuery, useGetUserOverviewQuery } = statsApi;

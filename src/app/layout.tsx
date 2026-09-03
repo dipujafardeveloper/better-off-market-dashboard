@@ -19,7 +19,7 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 export const metadata: Metadata = {
   title: {
     default: "Admin Dashboard | BetterOffMarket",
-    template: "%s | Taxi",
+    template: "%s | BetterOffMarket",
   },
   description: "This is Official Application Dashboard for BetterOffMarket",
 };
@@ -35,7 +35,7 @@ export default function RootLayout({
         <Providers>
           <AntdRegistry>
             <ConfigProvider theme={antTheme}>
-              <Toaster position="top-center" />
+              <Toaster position="top-center" richColors />
               {children}
             </ConfigProvider>
           </AntdRegistry>
