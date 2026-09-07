@@ -1,5 +1,5 @@
 "use client";
-import { Avatar, Badge, Flex } from "antd";
+import { Avatar, Badge, Flex, Skeleton } from "antd";
 import { IoNotificationsOutline } from "react-icons/io5";
 import avatarImg from "@/assets/image/profile.png";
 
@@ -18,6 +18,7 @@ import { FaBars } from "react-icons/fa6";
 import { useAppDispatch } from "@/redux/hooks";
 import { logout } from "@/redux/features/authSlice";
 import { useRouter } from "next/navigation";
+import { useGetMyProfileQuery } from "@/redux/api/profileApi";
 
 type TNavbarProps = {
   collapsed: boolean;
@@ -27,6 +28,9 @@ type TNavbarProps = {
 const Navbar = ({ collapsed, setCollapsed }: TNavbarProps) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const { data, isLoading } = useGetMyProfileQuery(undefined);
+
+  console.log(data?.data);
   return (
     <div className="flex items-center justify-between w-[97%]">
       {/* Header left side */}
@@ -43,7 +47,12 @@ const Navbar = ({ collapsed, setCollapsed }: TNavbarProps) => {
         </button>
         <div className="flex-col px-4 hidden md:flex">
           <h2 className="md:text-xl text-lg  font-medium text-[#3A3C3B]">
-            Welcome, Mitchell
+            Welcome,{" "}
+            {isLoading ? (
+              <Skeleton.Input active size="small" />
+            ) : (
+              data?.data?.name
+            )}
             <span className="block  text-xs font-normal">
               Welcome back! Here's what's happening today.
             </span>
@@ -76,14 +85,18 @@ const Navbar = ({ collapsed, setCollapsed }: TNavbarProps) => {
         <Menubar className="py-6 rounded-full">
           <MenubarMenu>
             <MenubarTrigger className="shadow-none px-0 rounded-full py-2">
-              <div className="flex items-center gap-x-2  px-2 h-fit">
-                <p className="text-black">Mitchell</p>
-                <Avatar
-                  src={avatarImg.src}
-                  size={40}
-                  className="size-12"
-                ></Avatar>
-              </div>
+              {isLoading ? (
+                <Skeleton.Input active size="small" />
+              ) : (
+                <div className="flex items-center gap-x-2  px-2 h-fit">
+                  <p className="text-black">{data?.data?.name}</p>
+                  <Avatar
+                    src={data?.data?.profile}
+                    size={40}
+                    className="size-12"
+                  ></Avatar>
+                </div>
+              )}
             </MenubarTrigger>
 
             <MenubarContent className="text-primary-gray">

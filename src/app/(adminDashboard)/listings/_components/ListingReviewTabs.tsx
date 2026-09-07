@@ -3,6 +3,10 @@
 import { useState } from "react";
 import { Tabs } from "antd";
 import { ListingQueue, type ListingItem } from "./ListingQueue";
+import { useGetPropertiesQuery } from "@/redux/api/propertiesApi";
+import PaginationSection from "@/components/shared/PaginationSection";
+import { useUpdateSearchParams } from "@/hooks/useUpdateSearchParams";
+import { useSearchParams } from "next/navigation";
 
 interface TabConfig {
   key: string;
@@ -17,9 +21,6 @@ interface TabConfig {
 const handleReview = (l: ListingItem) => console.log("review", l);
 const handleApprove = (l: ListingItem) => console.log("approve", l);
 const handleReject = (l: ListingItem) => console.log("reject", l);
-const handleEdit = (l: ListingItem) => console.log("edit", l);
-const handleUnpublish = (l: ListingItem) => console.log("unpublish", l);
-const handleResubmit = (l: ListingItem) => console.log("resubmit", l);
 
 const reviewAction: ListingAction = {
   label: "Review",
@@ -125,22 +126,43 @@ const TAB_CONFIG: TabConfig[] = [
   { key: "sold", navLabel: "Sold", title: "Sold Listings", listings: [] },
 ];
 
+const tabs = ["Pending", "Active", "Rejected", "Sold", "Under Contract"];
 export function ListingReviewTabs() {
-  const [activeKey, setActiveKey] = useState(TAB_CONFIG[0].key);
+  const updateParams = useUpdateSearchParams();
+  const [activeKey, setActiveKey] = useState("Pending");
   const activeTab =
     TAB_CONFIG.find((tab) => tab.key === activeKey) ?? TAB_CONFIG[0];
+  const page = useSearchParams().get("page") || "1";
+  const limit = useSearchParams().get("limit") || "10";
+
+  const queries: Record<string, string | number> = {};
+
+  queries["status"] = activeKey;
+  queries["page"] = page;
+  queries["limit"] = limit;
+
+  const { data } = useGetPropertiesQuery(queries);
+
+  const metaData = data?.meta ?? {};
+  const properties = data?.data?.properties ?? [];
+
+  console.log(properties);
+
+  const handleOnChange = (key: string) => {
+    updateParams({ page: "1" });
+    setActiveKey(key);
+  };
 
   return (
     <div className="rounded-3xl bg-white p-4 shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] sm:p-6">
       <Tabs
         activeKey={activeKey}
-        onChange={setActiveKey}
-        items={TAB_CONFIG.map((tab) => ({
-          key: tab.key,
+        onChange={handleOnChange}
+        items={tabs?.map((tab) => ({
+          key: tab,
           label: (
             <span className="text-sm font-medium">
-              {tab.navLabel}
-              {typeof tab.count === "number" && ` (${tab.count})`}
+              {tab}({data?.data?.statusCounts[tab] || 0})
             </span>
           ),
         }))}
@@ -149,10 +171,17 @@ export function ListingReviewTabs() {
 
       {/* Same container, just different data/title per tab */}
       <ListingQueue
+        status={activeKey}
         title={activeTab.title}
         badgeText={activeTab.badgeText}
         badgeColorClass={activeTab.badgeColorClass}
         listings={activeTab.listings}
+      />
+
+      <PaginationSection
+        total={metaData?.total ?? 0}
+        current={Number(page)}
+        pageSize={Number(limit)}
       />
     </div>
   );

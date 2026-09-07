@@ -13,7 +13,7 @@ const propertyApi = baseApi.injectEndpoints({
     }),
     getProperties: build.query({
       query: (params) => ({
-        url: "/properties",
+        url: "/properties/dashboard",
         method: "GET",
         params,
       }),
