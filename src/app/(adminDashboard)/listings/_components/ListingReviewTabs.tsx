@@ -41,97 +41,10 @@ const rejectAction: ListingAction = {
 
 type ListingAction = ListingItem["actions"][number];
 
-const TAB_CONFIG: TabConfig[] = [
-  {
-    key: "pending",
-    navLabel: "Pending approval",
-    count: 5,
-    title: "Pending Approval Queue",
-    badgeText: "5 ITEMS AWAITING",
-    badgeColorClass: "bg-[#FFDBD0] text-[#832600]",
-    listings: [
-      {
-        id: 1,
-        title: "Condo — Phoenix, AZ",
-        agentName: "James R.",
-        county: "Warren County",
-        submittedDate: "Jun 14, 2026",
-        photoCount: 2,
-        documentCount: 1,
-        price: 175000,
-        imageUrl: "/property_image.png",
-        actions: [reviewAction, approveAction, rejectAction],
-      },
-      {
-        id: 2,
-        title: "Condo — Phoenix, AZ",
-        agentName: "James R.",
-        county: "Warren County",
-        submittedDate: "Jun 14, 2026",
-        photoCount: 2,
-        documentCount: 0,
-        price: 175000,
-        imageUrl: "/property_image.png",
-        actions: [reviewAction, rejectAction], // no Approve — missing documents
-      },
-      {
-        id: 3,
-        title: "Loft — Chicago, IL",
-        agentName: "Sarah L.",
-        county: "Cook County",
-        submittedDate: "Jun 14, 2026",
-        photoCount: 2,
-        documentCount: 1,
-        price: 410000,
-        imageUrl: "/property_image.png",
-        actions: [reviewAction, approveAction, rejectAction],
-      },
-      {
-        id: 4,
-        title: "Loft — Chicago, IL",
-        agentName: "Sarah L.",
-        county: "Cook County",
-        submittedDate: "Jun 14, 2026",
-        photoCount: 2,
-        documentCount: 1,
-        price: 410000,
-        imageUrl: "/property_image.png",
-        actions: [reviewAction, approveAction, rejectAction],
-      },
-    ],
-  },
-  {
-    key: "active",
-    navLabel: "All active",
-    count: 535,
-    title: "Active Listings",
-    // badgeText: "535 LIVE",
-    badgeColorClass: "bg-green-100 text-green-600",
-    listings: [],
-  },
-  {
-    key: "featured",
-    navLabel: "Featured",
-    title: "Featured Listings",
-    listings: [],
-  },
-  {
-    key: "rejected",
-    navLabel: "Rejected",
-    title: "Rejected Listings",
-    // badgeText: "1 REJECTED",
-    badgeColorClass: "bg-red-100 text-red-600",
-    listings: [],
-  },
-  { key: "sold", navLabel: "Sold", title: "Sold Listings", listings: [] },
-];
-
 const tabs = ["Pending", "Active", "Rejected", "Sold", "Under Contract"];
 export function ListingReviewTabs() {
   const updateParams = useUpdateSearchParams();
   const [activeKey, setActiveKey] = useState("Pending");
-  const activeTab =
-    TAB_CONFIG.find((tab) => tab.key === activeKey) ?? TAB_CONFIG[0];
   const page = useSearchParams().get("page") || "1";
   const limit = useSearchParams().get("limit") || "10";
 
@@ -172,10 +85,9 @@ export function ListingReviewTabs() {
       {/* Same container, just different data/title per tab */}
       <ListingQueue
         status={activeKey}
-        title={activeTab.title}
-        badgeText={activeTab.badgeText}
-        badgeColorClass={activeTab.badgeColorClass}
-        listings={activeTab.listings}
+        badgeText={"badgeText"}
+        badgeColorClass={"activeTab.badgeColorClass"}
+        listings={properties}
       />
 
       <PaginationSection
