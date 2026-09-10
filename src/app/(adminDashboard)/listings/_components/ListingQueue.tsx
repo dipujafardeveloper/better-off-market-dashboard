@@ -1,4 +1,11 @@
-import { Image } from "antd";
+import ImageWithFallback from "@/components/shared/image/ImageWithFallback";
+import Preview from "@/components/shared/utils/image_preview_option";
+import ImagePreviewer from "@/components/shared/utils/images-previewer";
+import {
+  useApprovePropertyMutation,
+  useRejectPropertyMutation,
+} from "@/redux/api/propertiesApi";
+import { Image, Popconfirm, message } from "antd";
 import {
   AlertCircleIcon,
   CalendarIcon,
@@ -6,6 +13,7 @@ import {
   ImageIcon,
 } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 
 export type ActionVariant =
   | "neutral"
@@ -29,15 +37,18 @@ export interface ListingItem {
   photoCount: number;
   documentCount: number;
   price: number;
-  imageUrl: string;
+  images: string[];
   actions: ListingAction[];
+  /** Show Approve/Reject Popconfirm buttons for this listing (e.g. only on the Pending tab) */
+  showApprovalActions?: boolean;
 }
 
 interface ListingQueueProps {
-  title: string;
+  status: string;
   badgeText?: string;
-  badgeColorClass?: string; // e.g. "bg-orange-100 text-orange-600"
+  badgeColorClass?: string;
   listings: ListingItem[];
+  totalProperties: number;
   emptyLabel?: string;
 }
 
@@ -51,16 +62,24 @@ const ACTION_STYLES: Record<ActionVariant, string> = {
 };
 
 export function ListingQueue({
-  title,
+  status,
   badgeText,
   badgeColorClass = "bg-[#FFDBD0] text-[#832600]",
   listings,
+  totalProperties,
   emptyLabel = "No listings here yet",
 }: ListingQueueProps) {
   return (
     <div>
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-xl font-bold text-primary-black">{title}</h2>
+        <div className="flex justify-between w-full items-start">
+          <h2 className="text-xl font-bold text-primary-black">
+            {status} Listings
+          </h2>
+          <span className="bg-green-50 px-4 py-1 border border-green-200  rounded-full">
+            {totalProperties} Properties {status}
+          </span>
+        </div>
         {badgeText && (
           <span
             className={`rounded-full px-3 py-1 text-xs font-semibold ${badgeColorClass}`}
@@ -84,20 +103,48 @@ export function ListingQueue({
 }
 
 function ListingCard({ listing }: { listing: ListingItem }) {
+   const [previewImgIndex, setPreviewImgIndex] = useState(-1);
+  const [approveProperty, { isLoading: isApproving }] =
+    useApprovePropertyMutation();
+  const [rejectProperty, { isLoading: isRejecting }] =
+    useRejectPropertyMutation();
+
+  const handleApprove = async () => {
+    try {
+      await approveProperty(listing.id).unwrap();
+      message.success("Listing approved successfully");
+    } catch (err: any) {
+      message.error(err?.data?.message || "Failed to approve listing");
+    }
+  };
+
+  const handleReject = async () => {
+    try {
+      await rejectProperty(listing.id).unwrap();
+      message.success("Listing rejected");
+    } catch (err: any) {
+      message.error(err?.data?.message || "Failed to reject listing");
+    }
+  };
+
   return (
     <div className="flex flex-col gap-4 rounded-2xl bg-gray-50 p-4 sm:flex-row sm:items-center">
-      <Image
-        src={listing.imageUrl}
-        alt={listing.title}
-        width={148}
-        height={110}
-        className="w-full shrink-0 rounded-lg object-cover"
-      />
+      <Preview onClick={() => setPreviewImgIndex(0)}>
+        <ImageWithFallback
+          src={listing.images?.[0]}
+          alt={"property image"}
+          width={1200}
+          height={1200}
+          className="w-[149px] h-[110px] shrink-0 rounded-lg object-cover"
+        />
+      </Preview>
 
       <div className="flex-1">
-        <h3 className="font-semibold text-primary-black">{listing.title}</h3>
-        <p className="mt-0.5 text-sm text-[#565E74]">
-          {listing.agentName} · {listing.county}
+        <h3 className="font-semibold text-primary-black line-clamp-1">
+          {listing.title}
+        </h3>
+        <p className="mt-0.5 text-sm text-[#565E74] line-clamp-1">
+          {listing.agentName}
         </p>
 
         <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[#505F76]">
@@ -122,29 +169,65 @@ function ListingCard({ listing }: { listing: ListingItem }) {
           )}
         </div>
 
-        {listing.actions.length > 0 && (
-          <div className="mt-3 flex flex-wrap items-center gap-2">
-            {listing.actions.map((action) =>
-              action.link ? (
-                <Link
-                  key={action.label}
-                  href={action.link}
-                  className={`rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${ACTION_STYLES[action.variant]}`}
-                >
-                  {action.label}
-                </Link>
-              ) : (
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          {/* Generic actions (e.g. "Review"/"View") still render as-is */}
+          {listing.actions.map((action) =>
+            action.link ? (
+              <Link
+                key={action.label}
+                href={action.link}
+                className={`rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${ACTION_STYLES[action.variant]}`}
+              >
+                {action.label}
+              </Link>
+            ) : (
+              <button
+                key={action.label}
+                onClick={() => action.onClick?.(listing)}
+                className={`rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${ACTION_STYLES[action.variant]}`}
+              >
+                {action.label}
+              </button>
+            ),
+          )}
+
+          {/* Approve / Reject — only for pending listings, confirmed via Popconfirm */}
+          {listing.showApprovalActions && (
+            <>
+              <Popconfirm
+                title="Approve this listing?"
+                description="This will make the property publicly visible to buyers."
+                okText="Approve"
+                cancelText="Cancel"
+                okButtonProps={{ loading: isApproving }}
+                onConfirm={handleApprove}
+              >
                 <button
-                  key={action.label}
-                  onClick={() => action.onClick?.(listing)}
-                  className={`rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${ACTION_STYLES[action.variant]}`}
+                  disabled={isApproving || isRejecting}
+                  className={`rounded-md px-4 py-1.5 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${ACTION_STYLES.primary}`}
                 >
-                  {action.label}
+                  Approve
                 </button>
-              ),
-            )}
-          </div>
-        )}
+              </Popconfirm>
+
+              <Popconfirm
+                title="Reject this listing?"
+                description="The seller will be notified their listing was rejected."
+                okText="Reject"
+                cancelText="Cancel"
+                okButtonProps={{ danger: true, loading: isRejecting }}
+                onConfirm={handleReject}
+              >
+                <button
+                  disabled={isApproving || isRejecting}
+                  className={`rounded-md px-4 py-1.5 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${ACTION_STYLES["danger-outline"]}`}
+                >
+                  Reject
+                </button>
+              </Popconfirm>
+            </>
+          )}
+        </div>
       </div>
 
       <div className="shrink-0 text-right">
@@ -152,6 +235,12 @@ function ListingCard({ listing }: { listing: ListingItem }) {
           {formatPrice(listing.price)}
         </span>
       </div>
+
+        <ImagePreviewer
+          imageUrls={listing?.images || []}
+          previewImgIndex={previewImgIndex}
+          setPreviewImgIndex={setPreviewImgIndex}
+        />
     </div>
   );
 }

@@ -1,4 +1,3 @@
-
 export interface Conversation {
   id: string;
   name: string;
@@ -24,7 +23,7 @@ export interface ChatMessage {
   id: string;
   sender: "me" | "them";
   content: string;
-  time: string; 
+  time: string;
 }
 
 export interface ChatThread {
@@ -32,7 +31,6 @@ export interface ChatThread {
   dateLabel: string; // e.g. "JUNE 14, 2024"
   messages: ChatMessage[];
 }
-
 
 export type TStatus = "active" | "blocked";
 export interface IUser {
@@ -46,5 +44,114 @@ export interface IUser {
   status: TStatus;
   profile: string;
   createdAt: string;
+}
 
+export interface IDocument {
+  _id: string;
+  name: string;
+  size: string;
+  updated: string;
+  url: string;
+}
+
+export interface ILocation {
+  type: "Point";
+  coordinates: [number, number];
+}
+
+export interface IOpenHouse {
+  date?: string;
+  startTime?: string;
+  endTime?: string;
+}
+
+
+export type TPropertyStatus =
+  | "Pending"
+  | "Active"
+  | "Under Contract"
+  | "Sold"
+  | "Rejected";
+
+export interface IPropertyResponse {
+  _id: string;
+  status: TPropertyStatus;
+
+  propertyType: string;
+  useType?: string;
+  useTypeOther?: string;
+
+  // Ownership
+  ownership: "own" | "assignable";
+  assignableContractFile?: IDocument;
+
+  location: ILocation;
+
+  // Basic Information
+  streetAddress: string;
+  state: string;
+  city: string;
+  zipCode: string;
+  county: string;
+  parcelIds?: string;
+  listingPrice: number;
+  buyItNowPrice?: number;
+  oldListingPrice?: number;
+  arv?: number;
+  marketingDescription: string;
+  utilities?: string;
+
+  // Property Specifications — dynamic, keyed by SpecField.name
+  specifications: Record<string, string | number>;
+
+  // Major Components & Ages
+  roofMaterial?: string;
+  roofMaterialOther?: string;
+  roofAge?: number;
+  heatingSystem?: string;
+  heatingSystemOther?: string;
+  heatingAge?: number;
+  cooling?: string;
+  coolingOther?: string;
+  coolingAge?: number;
+  waterHeating?: string;
+  waterHeatingOther?: string;
+  waterHeatingAge?: number;
+  water?: string;
+  waterOther?: string;
+  sewer?: string;
+  sewerOther?: string;
+  foundation?: string;
+  foundationOther?: string;
+  otherUpdates?: string;
+
+  // HOA
+  hasHoa: "yes" | "no";
+  hoaAmount?: number;
+  hoaFrequency?: "Monthly" | "Quarterly" | "Annually";
+  hoaIncludes?: string;
+
+  // Closing
+  titleCompany?: string;
+  closingDate: string;
+
+  // Files (S3 URLs after upload middleware)
+  photos: string[];
+  documents?: IDocument[];
+
+  isDeleted: boolean;
+
+  // utils properties
+  totalViews: number;
+  totalSaved: number;
+  totalOffers: number;
+  totalRsvp: number;
+
+  openHouse: IOpenHouse;
+
+  seller: IUser;
+
+  // Usually present from Mongoose timestamps, add if your schema has `timestamps: true`
+  createdAt: string;
+  updatedAt: string;
 }

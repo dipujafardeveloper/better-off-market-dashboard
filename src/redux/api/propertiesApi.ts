@@ -88,6 +88,21 @@ const propertyApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: [tagTypes.property],
     }),
+
+    approveProperty: build.mutation({
+      query: (id) => ({
+        url: `/properties/approve/${id}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: [tagTypes.property],
+    }),
+    rejectProperty: build.mutation({
+      query: (id) => ({
+        url: `/properties/reject/${id}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: [tagTypes.property],
+    }),
   }),
 });
 
@@ -103,4 +118,6 @@ export const {
   useDeletePropertyMutation,
   useIncreaseViewCountMutation,
   useIncreaseRSVPCountMutation,
+  useApprovePropertyMutation,
+  useRejectPropertyMutation   
 } = propertyApi;

@@ -1,42 +1,23 @@
 "use client";
 import { PDFIcon } from "@/icon";
+import { IDocument } from "@/types";
 import { Download, FileText } from "lucide-react";
 
-interface Document {
-  id: string;
-  name: string;
-  size: string;
-  updated: string;
-  url?: string;
-}
+export function Documents({
+  documents,
+  assignableContractFile,
+}: {
+  documents: IDocument[] | undefined;
+  assignableContractFile: IDocument | undefined;
+}) {
+  const displayDocuments = documents;
 
-interface DocumentsProps {
-  documents?: Document[];
-}
-
-export function Documents({ documents = [] }: DocumentsProps) {
-  const defaultDocuments: Document[] = [
-    {
-      id: "1",
-      name: "Property_Disclosures_Willow_Memphis.pdf",
-      size: "2.4 MB",
-      updated: "Oct 12, 2024",
-    },
-    {
-      id: "2",
-      name: "Structural_Inspection_Report.pdf",
-      size: "4.1 MB",
-      updated: "Sep 28, 2024",
-    },
-  ];
-
-  const displayDocuments = documents.length > 0 ? documents : defaultDocuments;
-
-  const handleDownload = (doc: Document) => {
+  const handleDownload = (doc: IDocument) => {
     const link = document.createElement("a");
-    link.href = doc.url || "";
-    link.download = doc.name;
+    link.href = doc?.url || "";
+    link.download = doc?.name;
     document.body.appendChild(link);
+    link.target = "_blank";
     link.click();
     document.body.removeChild(link);
   };
@@ -47,9 +28,9 @@ export function Documents({ documents = [] }: DocumentsProps) {
         <FileText color="#00214C" /> Documents
       </h1>
       <div className="space-y-3">
-        {displayDocuments.map((doc) => (
+        {displayDocuments?.map((doc) => (
           <div
-            key={doc.id}
+            key={doc?._id}
             className="flex items-center gap-4 bg-white border-2 border-primary-border-color p-3 rounded-lg hover:bg-gray-150 transition-colors"
           >
             <PDFIcon className="w-5 h-5 text-gray-600 shrink-0 mt-0.5" />
@@ -58,7 +39,8 @@ export function Documents({ documents = [] }: DocumentsProps) {
                 {doc.name}
               </h3>
               {/* <p className="text-xs text-gray-500 mt-1">
-                {doc.size} • Updated {doc.updated}
+                {doc.size} • Updated{" "}
+                {moment(doc.updated).format("MMM DD, YYYY")}
               </p> */}
             </div>
             <button
@@ -70,6 +52,31 @@ export function Documents({ documents = [] }: DocumentsProps) {
             </button>
           </div>
         ))}
+
+        {assignableContractFile && (
+          <div
+            key={assignableContractFile?._id}
+            className="flex items-center gap-4 bg-white border-2 border-primary-border-color p-3 rounded-lg hover:bg-gray-150 transition-colors"
+          >
+            <PDFIcon className="w-5 h-5 text-gray-600 shrink-0 mt-0.5" />
+            <div className="flex-1 min-w-0">
+              <h3 className="text-sm font-medium text-primary-black truncate w-50 md:w-full">
+                {assignableContractFile?.name}
+              </h3>
+              {/* <p className="text-xs text-gray-500 mt-1">
+                {doc.size} • Updated{" "}
+                {moment(doc.updated).format("MMM DD, YYYY")}
+              </p> */}
+            </div>
+            <button
+              onClick={() => handleDownload(assignableContractFile)}
+              className="shrink-0 p-2 text-gray-600 hover:text-primary-black transition-colors cursor-pointer hover:bg-gray-200 duration-100  rounded-full"
+              aria-label={`Download ${assignableContractFile?.name}`}
+            >
+              <Download className="h-5 w-5" />
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

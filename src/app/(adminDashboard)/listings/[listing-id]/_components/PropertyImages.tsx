@@ -1,34 +1,25 @@
 "use client";
+import ImageWithFallback from "@/components/shared/image/ImageWithFallback";
 import Preview from "@/components/shared/utils/image_preview_option";
 import ImagePreviewer from "@/components/shared/utils/images-previewer";
+import { ILocation } from "@/types";
 import { LayoutGrid } from "lucide-react";
-import Image from "next/image";
 import { useState } from "react";
 
-export default function PropertyImages() {
+export default function PropertyImages({
+  propertyImages,
+  propertyType,
+}: {
+  propertyImages: string[];
+  propertyType: string;
+  location: ILocation;
+}) {
   const [previewImgIndex, setPreviewImgIndex] = useState(-1);
 
-  const images = [
-    "/properties/property_details_image_1.png",
-    "/properties/property_details_image_2.png",
-    "/properties/property_details_image_3.png",
-    "/properties/property_details_image_4.png",
-    "/properties/property_details_image_5.png",
-    "/properties/property_image_1.png",
-    "/properties/property_image_2.png",
-    "/properties/property_image_3.png",
-  ];
+  const images = propertyImages;
 
   return (
     <>
-      {/*
-        Outer wrapper gets a real, always-computed height (vw-based,
-        clamped with max-h-) instead of relying on aspect-ratio + h-full
-        percentage children — that combo can resolve to an indefinite
-        height and let grid rows size off image content instead of
-        splitting evenly. Every grid item also gets min-h-0 so its
-        1fr share can't be overridden by an image's intrinsic size.
-      */}
       <div className="w-full h-[85vw] sm:h-[90vw] lg:h-[30vw] max-h-90 sm:max-h-125  lg:max-h-125">
         <div className="grid grid-cols-2 lg:grid-cols-4 grid-rows-[2fr_1fr] lg:grid-rows-2 gap-2 sm:gap-4 h-full w-full min-h-0">
           {/* Main image */}
@@ -37,8 +28,8 @@ export default function PropertyImages() {
               onClick={() => setPreviewImgIndex(0)}
               className="h-full w-full"
             >
-              <Image
-                src="/properties/property_details_image_1.png"
+              <ImageWithFallback
+                src={propertyImages[0]}
                 alt="property_image_1"
                 width={1200}
                 height={1200}
@@ -46,7 +37,7 @@ export default function PropertyImages() {
               />
             </Preview>
             <span className="absolute top-3 left-3 sm:top-4.5 sm:left-5 text-xs font-bold text-primary-color bg-white py-1.5 px-3 sm:py-2 rounded-full uppercase z-10">
-              Residential
+              {propertyType}
             </span>
           </div>
 
@@ -56,8 +47,8 @@ export default function PropertyImages() {
               onClick={() => setPreviewImgIndex(1)}
               className="h-full w-full"
             >
-              <Image
-                src="/properties/property_details_image_2.png"
+              <ImageWithFallback
+                src={propertyImages[1]}
                 alt="property_image_2"
                 width={1200}
                 height={1200}
@@ -72,8 +63,8 @@ export default function PropertyImages() {
               onClick={() => setPreviewImgIndex(2)}
               className="h-full w-full"
             >
-              <Image
-                src="/properties/property_details_image_3.png"
+              <ImageWithFallback
+                src={propertyImages[2]}
                 alt="property_image_3"
                 width={1200}
                 height={1200}
@@ -96,8 +87,8 @@ export default function PropertyImages() {
               onClick={() => setPreviewImgIndex(3)}
               className="h-full w-full"
             >
-              <Image
-                src="/properties/property_details_image_4.png"
+              <ImageWithFallback
+                src={propertyImages[3]}
                 alt="property_image_4"
                 width={1200}
                 height={1200}
@@ -112,31 +103,33 @@ export default function PropertyImages() {
               onClick={() => setPreviewImgIndex(4)}
               className="h-full w-full"
             >
-              <Image
-                src="/properties/property_details_image_5.png"
+              <ImageWithFallback
+                src={propertyImages[4]}
                 alt="property_image_5"
                 width={1200}
                 height={1200}
                 className="absolute inset-0 w-full h-full object-cover lg:rounded-br-xl"
               />
             </Preview>
-            <div
-              onClick={() => setPreviewImgIndex(5)}
-              className="bg-white/90 flex items-center gap-1 absolute bottom-4 right-4 px-2 py-1.5 text-sm font-medium rounded-md z-999 cursor-pointer"
-            >
-              <LayoutGrid size={16} /> Show all photos
-            </div>
+            {propertyImages[5] && (
+              <div
+                onClick={() => setPreviewImgIndex(5)}
+                className="bg-white/90 flex items-center gap-1 absolute bottom-4 right-4 px-2 py-1.5 text-sm font-medium rounded-md z-999 cursor-pointer"
+              >
+                <LayoutGrid size={16} /> Show all photos
+              </div>
+            )}
           </div>
         </div>
       </div>
 
-      <div>
+      <>
         <ImagePreviewer
           imageUrls={images}
           previewImgIndex={previewImgIndex}
           setPreviewImgIndex={setPreviewImgIndex}
         />
-      </div>
+      </>
     </>
   );
 }
