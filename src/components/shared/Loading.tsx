@@ -2,7 +2,7 @@ import { ConfigProvider, Spin } from "antd";
 
 export default function Loading() {
   return (
-     <div className=" h-screen w-full flex justify-center items-center">
+     <div className=" h-[calc(100vh-100px)] w-full flex justify-center items-center">
       <ConfigProvider
         theme={{
           components: {

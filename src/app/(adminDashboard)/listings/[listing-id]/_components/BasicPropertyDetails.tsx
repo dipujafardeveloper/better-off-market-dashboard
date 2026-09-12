@@ -37,7 +37,7 @@ export function BasicPropertyDetails({ property }: PropertyListingProps) {
             <div className="inline-flex">
               <span
                 className={cn(
-                  "bg-[#DCFCE7] text-[#15803D] px-3 py-1 rounded-md font-bold text-xs whitespace-nowrap",
+                  " px-3 py-1 rounded-md font-bold text-xs whitespace-nowrap",
                   statusColor[property?.status],
                 )}
               >

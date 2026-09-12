@@ -24,7 +24,7 @@ export default function PropertyContainer({
       <div className="grid lg:grid-cols-6 gap-6 mt-4">
         <div className="lg:col-span-4 space-y-6">
           <BasicPropertyDetails property={property} />
-          <PropertyInfo  property={property}/>
+          <PropertyInfo property={property} />
           {property?.documents?.length || property?.assignableContractFile ? (
             <Documents
               documents={property?.documents}
@@ -33,7 +33,7 @@ export default function PropertyContainer({
           ) : (
             ""
           )}
-           <LocationMap
+          <LocationMap
             lat={property?.location?.coordinates[1]}
             lng={property?.location?.coordinates[0]}
           />
@@ -44,9 +44,10 @@ export default function PropertyContainer({
           </Link>
         </div>
         <div className="lg:col-span-2 md:flex flex-wrap lg:flex-col gap-4 space-y-4">
-          <div>
-            <AdminDecisionCard />
-          </div>
+          {property?.status === "Pending" && (
+            <AdminDecisionCard property={property} />
+          )}
+
           <ProfileCard seller={property?.seller} />
         </div>
       </div>

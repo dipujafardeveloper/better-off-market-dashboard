@@ -155,3 +155,74 @@ export interface IPropertyResponse {
   createdAt: string;
   updatedAt: string;
 }
+
+
+export type OfferStatus =
+  | "pending"
+  | "countered"
+  | "accepted"
+  | "rejected"
+  | "withdrawn";
+export type OfferParty = "buyer" | "seller";
+
+export interface IOfferTerms {
+  offerAmount: number;
+  earnestMoney: number;
+  financingType: string;
+  otherFinancingType?: string;
+  financingTerms?: string;
+
+  closingCostOption: string;
+  sellerContribution?: number;
+
+  inspectionContingency: "yes" | "no";
+  inspectionDays?: number;
+  appraisalContingency: "yes" | "no";
+  // appraisalDays?: number;
+
+  hasAgent: "yes" | "no";
+  agentName?: string;
+  brokerageName?: string;
+  commission?: string;
+  paidBy?: OfferParty;
+
+  personalPropertyIncluded?: string;
+  itemsToBeRemoved?: string;
+
+  titleCompany?: string;
+  closingDate?: string;
+  possession?: string;
+  sellerPostClosingDays?: number;
+
+  additionalTerms?: string;
+  notesToSeller?: string;
+  createdAt: Date;
+}
+
+export interface IOfferHistoryEntry extends IOfferTerms {
+  round: number;
+  madeBy: OfferParty;
+  madeByUser: IUser | string;
+  createdAt: Date;
+  status: OfferStatus;
+}
+
+export interface IOffer {
+  _id: string;
+  property: IPropertyResponse;
+  buyer: IUser;
+  seller: IUser;
+
+  status: OfferStatus;
+  currentRound: number;
+  lastActionBy: OfferParty;
+
+  currentTerms: IOfferTerms; // latest terms on the table, whoever proposed them
+  history: IOfferHistoryEntry[]; // full audit trail, oldest first
+
+  supportingDocuments: IDocument[];
+
+  isDeleted: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}

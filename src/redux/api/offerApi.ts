@@ -11,13 +11,19 @@ const offerApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: [tagTypes.offer],
     }),
-    getMyOffers: builder.query({
+    getAllOffers: builder.query({
       query: (params) => ({
-        url: "/offers/my-offers",
+        url: "/offers",
         method: "GET",
         params,
       }),
       providesTags: [tagTypes.offer],
+    }),
+    getOfferStats: builder.query({
+      query: () => ({
+        url: "/offers/stats",
+        method: "GET",
+      }),
     }),
     withdrawOffer: builder.mutation({
       query: (id) => ({
@@ -68,7 +74,8 @@ const offerApi = baseApi.injectEndpoints({
 
 export const {
   useCreateOfferMutation,
-  useGetMyOffersQuery,
+  useGetAllOffersQuery,
+  useGetOfferStatsQuery,
   useWithdrawOfferMutation,
   useGetMyReceivedOffersQuery,
   useSentCounterOfferMutation,
