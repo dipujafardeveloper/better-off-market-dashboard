@@ -54,6 +54,7 @@ export default function Analytics({ data }: TProps) {
         <Empty />
       ) : (
         <div className="space-y-6">
+          <h5>Top 5 {activeTab} Properties</h5>
           {entries?.map((entry : any) => (
             <div key={entry.propertyId}>
               <div className="flex items-center justify-between mb-2">

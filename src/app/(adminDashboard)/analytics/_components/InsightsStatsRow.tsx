@@ -1,5 +1,5 @@
 // components/insights/InsightsStatsRow.tsx
-import { Users, Building2, ListCheck } from "lucide-react";
+import { Users, Building2, ListCheck, FileSearch } from "lucide-react";
 
 interface StatCard {
   icon: React.ReactNode;
@@ -14,9 +14,8 @@ interface InsightsStatsRowProps {
   analytics?: any;
 }
 
-export function InsightsStatsRow({
-  analytics,
-}: InsightsStatsRowProps) {
+export function InsightsStatsRow({ analytics }: InsightsStatsRowProps) {
+  console.log(analytics);
 
   const stats: StatCard[] = [
     {
@@ -40,10 +39,10 @@ export function InsightsStatsRow({
       value: analytics?.totalActiveListing ?? 0,
     },
     {
-      icon: <Building2 className="size-5 text-green-500" />,
-      iconBgClass: "bg-green-50",
-      label: "Active Listings",
-      value: analytics?.totalActiveListing ?? 0,
+      icon: <FileSearch className="size-5 text-yellow-500" />,
+      iconBgClass: "bg-yellow-50",
+      label: "Total Offers",
+      value: analytics?.totalOffer ?? 0,
     },
   ];
 

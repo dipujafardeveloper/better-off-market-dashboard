@@ -7,6 +7,15 @@ import { useGetAllOffersQuery } from "@/redux/api/offerApi";
 import { IOffer } from "@/types";
 import moment from "moment";
 import { getOfferStatusBadge } from "@/utils/getOfferStatusBadge";
+import { cn } from "@/lib/utils";
+
+const offerStatus ={
+  pending: "bg-[#FFF3E0] text-[#E65100]",
+  countered: "bg-[#f5dfcb] text-[#F57F17]",
+  accepted: "bg-[#E8F5E9] text-[#1B5E20]",
+  rejected: "bg-red-100 text-red-700",
+  withdrawn: "bg-[#deded4] text-[#5c5e1b]",
+}
 
 const formatAmount = (value: number) => `$${value?.toLocaleString("en-US")}`;
 
@@ -61,7 +70,11 @@ const OffersTable = () => {
     {
       title: "Status",
       dataIndex: "status",
-      render: (status: any) => <div className="bg0"> {getOfferStatusBadge(status)}</div>,
+      render: (status: keyof typeof offerStatus) => (
+        <div className={cn("bg0", offerStatus[status])}>
+          {getOfferStatusBadge(status)}
+        </div>
+      ),
     },
     {
       title: "Actions",

@@ -5,14 +5,14 @@ export function getOfferStatusBadge(status: string) {
   switch (status) {
     case "pending":
       return (
-        <Badge className="bg-[#FFF3E0] text-[#E65100] flex items-center gap-1 rounded-xs ">
+        <Badge className="bg-[#f6ede0] text-[#fc5a02] flex items-center gap-1 ">
           <Clock className="w-3 h-3" />
-          Pending 
+          Pending
         </Badge>
       );
     case "countered":
       return (
-        <Badge className=" text-[#F57F17] bg-red-600">⚡ Counter offer</Badge>
+        <Badge className=" bg-[#f5dfcb] text-[#F57F17] flex items-center gap-1 ">⚡ Counter offer</Badge>
       );
     case "accepted":
       return (

@@ -9,15 +9,23 @@ interface AddFaqFormValues {
 }
 
 interface AddFaqModalProps {
-title: string;
+  title: string;
   open: boolean;
   onClose: () => void;
+  disabled: boolean;
   onSubmit: (values: AddFaqFormValues) => void;
 }
 
-export function AddFaqModal({ open, onClose, onSubmit , title}: AddFaqModalProps) {
+export function AddFaqModal({
+  open,
+  onClose,
+  disabled,
+  onSubmit,
+  title,
+}: AddFaqModalProps) {
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
+
 
   const resetAndClose = () => {
     setQuestion("");
@@ -34,7 +42,9 @@ export function AddFaqModal({ open, onClose, onSubmit , title}: AddFaqModalProps
       centered
       width={480}
     >
-      <h2 className="mb-5 text-lg font-medium text-primary-black">{ title || "Add FAQ"}</h2>
+      <h2 className="mb-5 text-lg font-medium text-primary-black">
+        {title || "Add FAQ"}
+      </h2>
 
       <div className="space-y-5">
         <div>
@@ -53,9 +63,10 @@ export function AddFaqModal({ open, onClose, onSubmit , title}: AddFaqModalProps
           <label className="mb-1.5 block text-sm font-medium text-primary-black">
             Add Answer
           </label>
-          <input
+          <textarea
             value={answer}
             onChange={(e) => setAnswer(e.target.value)}
+            rows={4}
             placeholder="Answer"
             className="w-full rounded-md border border-gray-300 px-4 py-2.5 text-sm text-primary-black placeholder:text-gray-400 focus:border-primary-blue focus:outline-none focus:ring-1 focus:ring-primary-blue"
           />
@@ -78,6 +89,7 @@ export function AddFaqModal({ open, onClose, onSubmit , title}: AddFaqModalProps
             }
             onSubmit({ question, answer });
           }}
+          disabled={disabled}
           className="rounded-md bg-gray-900 px-6 py-2 text-sm font-semibold text-white hover:opacity-90"
         >
           Add

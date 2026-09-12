@@ -3,10 +3,16 @@
 import { useState } from "react";
 import { HelpCircle, Plus, Pencil, Trash2 } from "lucide-react";
 import { AddFaqModal } from "@/components/(adminDashboard)/modals/content/AddFaqModal";
+import {
+  useCreateFaqMutation,
+  useDeleteFaqMutation,
+  useGetFaqsQuery,
+} from "@/redux/api/faqsApi";
+import { message, Popconfirm, PopconfirmProps } from "antd";
+import { toast } from "sonner";
 
 export interface FaqEntry {
-  id: string | number;
-  audience: "SELLER" | "BUYER";
+  _id: string;
   question: string;
   answer: string;
 }
@@ -15,40 +21,40 @@ interface FaqEntriesSectionProps {
   faqs?: FaqEntry[];
 }
 
-const DEFAULT_FAQS: FaqEntry[] = [
-  {
-    id: 1,
-    audience: "SELLER",
-    question: "Is Betterofmarket free to use?",
-    answer: "Yes, listing your property is free.",
-  },
-  {
-    id: 2,
-    audience: "BUYER",
-    question: "How do I submit an offer?",
-    answer: "Use the Make Offer button on any listing.",
-  },
-  {
-    id: 3,
-    audience: "SELLER",
-    question: "Is payment processed on the platform?",
-    answer: "Payments are handled through your chosen title company.",
-  },
-];
-
-
 const handleDelete = (faq: FaqEntry) => console.log("delete", faq);
 
-export function FaqEntriesSection({
-  faqs = DEFAULT_FAQS,
-}: FaqEntriesSectionProps) {
+export function FaqEntriesSection({}: FaqEntriesSectionProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [title, setTitle] = useState("Add FAQ");
-
+  const [createFaq, { isLoading: isCreating }] = useCreateFaqMutation();
+  const { data } = useGetFaqsQuery({ limit: 100 });
+  const [deleteFaq] = useDeleteFaqMutation();
 
   const handleEdit = (faq: FaqEntry) => {
     setTitle("Edit FAQ");
     setIsModalOpen(true);
+  };
+
+  const handleAddFaq = async (faq: FaqEntry) => {
+    try {
+      await createFaq(faq).unwrap();
+      message.success("Successfully added FAQ");
+      setIsModalOpen(false);
+    } catch (error: any) {
+      message.error(error?.data?.message ?? "Failed to add FAQ");
+    }
+  };
+
+  const confirm = async (id: string) => {
+    toast.loading("Deleting FAQ...");
+    try {
+      await deleteFaq(id).unwrap();
+      message.success("Successfully deleted FAQ");
+      toast.dismiss();
+    } catch (error: any) {
+      message.error(error?.data?.message ?? "Failed to delete FAQ");
+      toast.dismiss();
+    }
   };
 
   return (
@@ -68,10 +74,10 @@ export function FaqEntriesSection({
       </div>
 
       <div className="space-y-3">
-        {faqs.map((faq) => (
+        {data?.data?.data?.map((faq: FaqEntry) => (
           <div
-            key={faq.id}
-            className="flex items-center gap-3 rounded-2xl bg-gray-50 p-4 shadow-[0_5px_15px_0_rgba(15,23,42,0.03)]"
+            key={faq?._id}
+            className="flex  gap-3 rounded-2xl bg-gray-50 p-4 shadow-[0_5px_15px_0_rgba(15,23,42,0.03)]"
           >
             <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-[#ECEEF0]">
               <HelpCircle color="#00214C" size={16} />
@@ -89,12 +95,17 @@ export function FaqEntriesSection({
               >
                 <Pencil color="#565E74" size={18} />
               </button>
-              <button
-                onClick={() => handleDelete(faq)}
-                className="text-red-500 hover:text-red-600"
+              <Popconfirm
+                title="Delete the question"
+                description="Are you sure to delete this question?"
+                onConfirm={() => confirm(faq?._id)}
+                okText="Yes"
+                cancelText="No"
               >
-                <Trash2 size={18} />
-              </button>
+                <button className="text-red-500 hover:text-red-600">
+                  <Trash2 size={18} />
+                </button>
+              </Popconfirm>
             </div>
           </div>
         ))}
@@ -104,9 +115,9 @@ export function FaqEntriesSection({
         title={title}
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+        disabled={isCreating}
         onSubmit={(values) => {
-          console.log("new faq", values);
-          setIsModalOpen(false);
+          handleAddFaq(values as FaqEntry);
         }}
       />
     </div>

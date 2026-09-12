@@ -4,7 +4,6 @@ import { cn } from "@/lib/utils";
 import type { Conversation, ChatThread } from "@/types";
 import ChatHeader from "./ChatHeader";
 import ChatMessages from "./ChatMessages";
-import MessageInput from "./MessageInput";
 
 type Props = {
   conversations: Conversation[];
