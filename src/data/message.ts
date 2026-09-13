@@ -10,7 +10,7 @@ export const mockConversations: Conversation[] = [
     timestamp: "2h ago",
     online: true,
   },
-  {
+{
     id: "2",
     name: "Sarah K.",
     initials: "SK",

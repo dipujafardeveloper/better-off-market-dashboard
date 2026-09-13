@@ -4,7 +4,6 @@ interface Conversation {
   id: string;
   partyA: string;
   partyB: string;
-  subject: string;
   messageCount: number;
   lastActivity: string;
 }
@@ -21,10 +20,9 @@ const DEFAULT_CONVERSATIONS: Conversation[] = Array.from(
     id: `${i + 1}`,
     partyA: "James B.",
     partyB: "James R.",
-    subject: "Memphis house",
     messageCount: 4,
     lastActivity: "Jun 14",
-  })
+  }),
 );
 
 export function ConversationsOverview({
@@ -48,7 +46,7 @@ export function ConversationsOverview({
               <p className="text-base font-medium text-primary-black">
                 {conversation.partyA}{" "}
                 <span className="text-[#9CA3AF]">&harr;</span>{" "}
-                {conversation.partyB} &mdash; {conversation.subject}
+                {conversation.partyB}
               </p>
               <p className="text-sm text-[#9CA3AF] mt-0.5">
                 {conversation.messageCount} messages &middot; Last:{" "}

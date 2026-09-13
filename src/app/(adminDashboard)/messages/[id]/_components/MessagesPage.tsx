@@ -27,12 +27,6 @@ export default function MessagesContainer({ conversations, threads }: Props) {
           <>
             <ChatHeader contact={activeThread.contact} onBack={() => setActiveId(null)} />
             <ChatMessages dateLabel={activeThread.dateLabel} messages={activeThread.messages} contact={activeThread.contact} />
-            {/* <MessageInput
-              onSend={(content) => {
-                // TODO: wire up to backend — e.g. sendMessage(activeId, content)
-                console.log("send:", content);
-              }}
-            /> */}
           </>
         ) : (
           <div className="flex-1 flex items-center justify-center text-sm text-slate-400">

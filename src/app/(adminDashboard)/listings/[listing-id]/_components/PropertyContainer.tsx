@@ -37,11 +37,6 @@ export default function PropertyContainer({
             lat={property?.location?.coordinates[1]}
             lng={property?.location?.coordinates[0]}
           />
-          <Link href={"/properties-list"}>
-            <Button className="w-full mt-5 bg-primary-color hover:bg-primary-color/90 text-white font-semibold py-5 px-4 rounded-lg transition-colors cursor-pointer">
-              Back listing
-            </Button>
-          </Link>
         </div>
         <div className="lg:col-span-2 md:flex flex-wrap lg:flex-col gap-4 space-y-4">
           {property?.status === "Pending" && (

@@ -1,7 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Modal, message } from "antd";
 import { X } from "lucide-react";
+import { FaqEntry } from "@/app/(adminDashboard)/content/_components/FaqEntriesSection";
 
 interface AddFaqFormValues {
   question: string;
@@ -10,7 +11,10 @@ interface AddFaqFormValues {
 
 interface AddFaqModalProps {
   title: string;
+  setTitle: (title: string) => void;
   open: boolean;
+  selectedFaq: FaqEntry | null;
+  setSelectedFaq: (faq: FaqEntry | null) => void;
   onClose: () => void;
   disabled: boolean;
   onSubmit: (values: AddFaqFormValues) => void;
@@ -18,20 +22,31 @@ interface AddFaqModalProps {
 
 export function AddFaqModal({
   open,
+  selectedFaq,
+  setSelectedFaq,
   onClose,
   disabled,
   onSubmit,
   title,
+  setTitle,
 }: AddFaqModalProps) {
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
 
-
   const resetAndClose = () => {
     setQuestion("");
     setAnswer("");
+    setSelectedFaq(null);
+    setTitle("Add FAQ");
     onClose();
   };
+
+  useEffect(() => {
+    if (selectedFaq) {
+      setQuestion(selectedFaq.question);
+      setAnswer(selectedFaq.answer);
+    }
+  }, [selectedFaq]);
 
   return (
     <Modal
@@ -88,11 +103,12 @@ export function AddFaqModal({
               return;
             }
             onSubmit({ question, answer });
+            resetAndClose();
           }}
           disabled={disabled}
           className="rounded-md bg-gray-900 px-6 py-2 text-sm font-semibold text-white hover:opacity-90"
         >
-          Add
+          {selectedFaq ? "Update" : "Add"}
         </button>
       </div>
     </Modal>

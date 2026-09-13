@@ -8,14 +8,15 @@ import { IOffer } from "@/types";
 import moment from "moment";
 import { getOfferStatusBadge } from "@/utils/getOfferStatusBadge";
 import { cn } from "@/lib/utils";
+import { useSearchParams } from "next/navigation";
 
-const offerStatus ={
+const offerStatus = {
   pending: "bg-[#FFF3E0] text-[#E65100]",
   countered: "bg-[#f5dfcb] text-[#F57F17]",
   accepted: "bg-[#E8F5E9] text-[#1B5E20]",
   rejected: "bg-red-100 text-red-700",
   withdrawn: "bg-[#deded4] text-[#5c5e1b]",
-}
+};
 
 const formatAmount = (value: number) => `$${value?.toLocaleString("en-US")}`;
 
@@ -24,9 +25,15 @@ const handleReview = (record: IOffer) => {
 };
 
 const OffersTable = () => {
-  const { data: offersData } = useGetAllOffersQuery({});
+  const page = useSearchParams().get("page") || "1";
+  const limit = useSearchParams().get("limit") || "10";
 
-  console.log("data =>>>>>>>>>>>>", offersData?.data);
+  const queries: Record<string, string> = {};
+
+  if (page) queries.page = page;
+  if (limit) queries.limit = limit;
+
+  const { data: offersData, isLoading } = useGetAllOffersQuery(queries);
 
   const columns: TableProps<IOffer>["columns"] = [
     {
@@ -97,7 +104,13 @@ const OffersTable = () => {
       <h2 className="mb-4 md:text-lg font-bold text-[#191C1E]">
         All offers — platform wide
       </h2>
-      <DataTable columns={columns} data={offersData?.data} pageSize={10} />
+      <DataTable
+        columns={columns}
+        data={offersData?.data}
+        pageSize={Number(limit)}
+        total={offersData?.meta?.total || 0}
+        isLoading={isLoading}
+      />
     </div>
   );
 };
