@@ -9,7 +9,6 @@ import { useGetSellerReviewsQuery } from "@/redux/api/reviewsApi";
 const INITIAL_REVIEW_LIMIT = 6;
 const REVIEW_LIMIT_STEP = 5;
 
-
 export default function SellerListingAndReviewsContainer() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -21,7 +20,7 @@ export default function SellerListingAndReviewsContainer() {
   const reviewLimit =
     Number(searchParams.get("reviewLimit")) || INITIAL_REVIEW_LIMIT;
 
-  const queries: Record<string, string | number> = { page, limit };
+  const queries: Record<string, string | number | string[]> = { page, limit };
 
   const { data: sellerListingData, isLoading: sellerListingLoading } =
     useGetSellerPropertiesQuery(

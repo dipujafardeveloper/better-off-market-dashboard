@@ -1,15 +1,11 @@
-import React from 'react'
-import MessagesContainer from './_components/MessagesPage'
-import { mockConversations, mockThreads } from '@/data/message'
+"use client";
+import React from "react";
+import MessagesContainer from "./_components/MessagesContainer";
 
 export default function MessagePage() {
   return (
     <div>
-        <MessagesContainer
-          conversations={mockConversations}
-          threads={mockThreads}
-        />
-     
+      <MessagesContainer />
     </div>
-  )
+  );
 }

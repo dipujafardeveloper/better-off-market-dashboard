@@ -9,23 +9,6 @@ export interface Conversation {
   online?: boolean;
 }
 
-export interface ChatContact {
-  id: string;
-  buyerName: string;
-  sellerName: string;
-  initials: string;
-  avatarColor: string;
-  propertyType: string;
-  city: string;
-  county: string;
-}
-
-export interface ChatMessage {
-  id: string;
-  sender: "me" | "them";
-  content: string;
-  time: string;
-}
 
 export interface ChatThread {
   contact: ChatContact;
@@ -260,4 +243,28 @@ export interface IMetaData {
   page: number;
   total: number;
   totalPage: number;
+}
+
+
+// types/chat.ts (add/update)
+export interface ChatParty {
+  id: string;
+  name: string;
+  profile: string | null;
+}
+
+export interface ChatContact {
+  id: string;
+  partyA: ChatParty;
+  partyB: ChatParty;
+}
+
+export interface ChatMessage {
+  id: string;
+  sender: string; // user id
+  receiver: string; // user id
+  text: string;
+  images: string[];
+  seen: boolean;
+  createdAt: string;
 }

@@ -1,9 +1,20 @@
 "use client";
+import Link from "next/link";
+import ConversationListSkeleton from "./ConversationListSkeleton";
+import moment from "moment";
 
 interface Conversation {
   id: string;
-  partyA: string;
-  partyB: string;
+  partyA: {
+    id: string;
+    name: string;
+    profile?: string;
+  };
+  partyB: {
+    id: string;
+    name: string;
+    profile?: string;
+  };
   messageCount: number;
   lastActivity: string;
 }
@@ -11,24 +22,13 @@ interface Conversation {
 interface ConversationsOverviewProps {
   title?: string;
   conversations?: Conversation[];
-  onReview?: (id: string) => void;
+  loading?: boolean;
 }
-
-const DEFAULT_CONVERSATIONS: Conversation[] = Array.from(
-  { length: 8 },
-  (_, i) => ({
-    id: `${i + 1}`,
-    partyA: "James B.",
-    partyB: "James R.",
-    messageCount: 4,
-    lastActivity: "Jun 14",
-  }),
-);
 
 export function ConversationsOverview({
   title = "Conversations overview",
-  conversations = DEFAULT_CONVERSATIONS,
-  onReview,
+  conversations,
+  loading,
 }: ConversationsOverviewProps) {
   return (
     <div className="w-full bg-[#F2F4F6] rounded-xl p-6">
@@ -36,34 +36,50 @@ export function ConversationsOverview({
         {title}
       </h2>
 
-      <div className="space-y-3">
-        {conversations.map((conversation) => (
-          <div
-            key={conversation.id}
-            className="flex items-center justify-between rounded-xl bg-white border border-[#E2E8F0] px-6 py-4"
-          >
-            <div>
-              <p className="text-base font-medium text-primary-black">
-                {conversation.partyA}{" "}
-                <span className="text-[#9CA3AF]">&harr;</span>{" "}
-                {conversation.partyB}
-              </p>
-              <p className="text-sm text-[#9CA3AF] mt-0.5">
-                {conversation.messageCount} messages &middot; Last:{" "}
-                {conversation.lastActivity}
-              </p>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => onReview?.(conversation.id)}
-              className="shrink-0 rounded-lg bg-[#0F2A4D] hover:bg-[#0F2A4D]/90 text-white text-sm font-semibold px-5 py-2 transition-colors"
+      {loading ? (
+        <ConversationListSkeleton count={8} />
+      ) : (
+        <div className="space-y-3">
+          {conversations?.map((conversation) => (
+            <div
+              key={conversation?.id}
+              className="flex items-center justify-between rounded-xl bg-white border border-[#E2E8F0] px-6 py-4"
             >
-              Review
-            </button>
-          </div>
-        ))}
-      </div>
+              <div>
+                <p className="text-base font-medium text-primary-black space-x-2">
+                  <Link
+                    href={`/seller-profile?seller=${conversation?.partyA?.id}`}
+                    className="hover:scale-105 hover:underline duration-300"
+                  >
+                    {" "}
+                    {conversation?.partyA?.name}
+                  </Link>
+                  <span className="text-[#9CA3AF]">&harr;</span>{" "}
+                  <Link
+                    href={`/seller-profile?seller=${conversation?.partyB?.id}`}
+                    className="hover:scale-105 hover:underline duration-300"
+                  >
+                    {conversation?.partyB?.name}
+                  </Link>
+                </p>
+                <p className="text-sm text-[#9CA3AF] mt-0.5">
+                  {conversation.messageCount} messages &middot; Last:{" "}
+                  {moment(conversation.lastActivity).format("ll")}
+                </p>
+              </div>
+
+              <Link href={`/messages/${conversation?.id}`}>
+                <button
+                  type="button"
+                  className="shrink-0 rounded-lg bg-[#0F2A4D] hover:bg-[#0F2A4D]/90 text-white text-sm font-semibold px-5 py-2 transition-colors"
+                >
+                  Review
+                </button>
+              </Link>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

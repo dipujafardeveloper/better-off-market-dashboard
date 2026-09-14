@@ -1,13 +1,9 @@
-"use client";
+"use client";;
 import ImageWithFallback from "@/components/shared/image/ImageWithFallback";
 import Preview from "@/components/shared/utils/image_preview_option";
 import ImagePreviewer from "@/components/shared/utils/images-previewer";
-import { Button } from "@/components/ui/button";
 import Empty from "@/components/ui/empty-data";
-import { cn } from "@/lib/utils";
 import { useGetSellerProfileQuery } from "@/redux/api/profileApi";
-import { useAppSelector } from "@/redux/hooks";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import SellerProfileSkeleton from "./seller-profile-skeleton";
@@ -19,7 +15,6 @@ export function SellerProfileCard() {
   const { data, isLoading } = useGetSellerProfileQuery(sellerId, {
     skip: !sellerId,
   });
-  const loggedInUser: any = useAppSelector((state) => state.auth.user);
   const user = data?.data;
 
   if (isLoading) return <SellerProfileSkeleton />;
@@ -93,15 +88,6 @@ export function SellerProfileCard() {
                     {user?.avgRating?.toFixed(1)}{" "}
                     <span className="text-primary-blue">★</span>
                   </p>
-                </div>
-                <div
-                  className={cn(user?._id === loggedInUser?.userId && "hidden")}
-                >
-                  <Link href={`/message?user=${user?._id}`}>
-                    <Button className="lg:px-10 px-5 py-5 cursor-pointer">
-                      Message Seller
-                    </Button>
-                  </Link>
                 </div>
               </div>
             </div>

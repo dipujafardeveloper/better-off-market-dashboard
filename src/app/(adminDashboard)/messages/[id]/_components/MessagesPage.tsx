@@ -1,39 +1,38 @@
-"use client";
-import { useState } from "react";
-import { cn } from "@/lib/utils";
-import type { Conversation, ChatThread } from "@/types";
-import ChatHeader from "./ChatHeader";
-import ChatMessages from "./ChatMessages";
+// "use client";
+// import { useState } from "react";
+// import { cn } from "@/lib/utils";
+// import type { Conversation, ChatThread } from "@/types";
+// import ChatHeader from "./ChatHeader";
+// import ChatMessages from "./ChatMessages";
+// import { useParams } from "next/navigation";
+// import { useGetSingleChatQuery } from "@/redux/api/chatApi";
 
-type Props = {
-  conversations: Conversation[];
-  threads: Record<string, ChatThread>; // keyed by conversation id
-};
+// type Props = {
+//   conversations: Conversation[];
+//   threads: Record<string, ChatThread>; // keyed by conversation id
+// };
 
-export default function MessagesContainer({ conversations, threads }: Props) {
-  const [activeId, setActiveId] = useState<string | null>(conversations[0]?.id ?? null);
-  const activeThread = activeId ? threads[activeId] : null;
+// export default function MessagesContainer({ conversations, threads }: Props) {
+//   const id = useParams()?.["id"];
 
-  return (
-    <div className="flex h-[calc(100vh-8rem)] bg-white rounded-xl overflow-hidden ">
+//   const { data } = useGetSingleChatQuery(id);
 
-      <div
-        className={cn(
-          "flex-1 min-w-0 flex-col",
-          activeId ? "flex" : "hidden md:flex",
-        )}
-      >
-        {activeThread ? (
-          <>
-            <ChatHeader contact={activeThread.contact} onBack={() => setActiveId(null)} />
-            <ChatMessages dateLabel={activeThread.dateLabel} messages={activeThread.messages} contact={activeThread.contact} />
-          </>
-        ) : (
-          <div className="flex-1 flex items-center justify-center text-sm text-slate-400">
-            Select a conversation
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
+//   console.log("====", data?.data?.messages);
+
+//   return (
+//     <div className="flex h-[calc(100vh-8rem)] bg-white rounded-xl overflow-hidden ">
+//       <div className={cn("flex-1 min-w-0 flex-col flex")}>
+//         {
+//           <>
+//             <ChatHeader contact={data?.data?.contact} />
+//             <ChatMessages
+//               dateLabel={activeThread.dateLabel}
+//               messages={data?.data?.messages}
+//               contact={data?.data?.contact}
+//             />
+//           </>
+//         }
+//       </div>
+//     </div>
+//   );
+// }

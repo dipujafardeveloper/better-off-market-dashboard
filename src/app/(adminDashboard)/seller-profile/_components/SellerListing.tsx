@@ -1,4 +1,4 @@
-// import { PropertyCard } from "@/components/shared/card/property-card";
+import { PropertyCard } from "@/components/(adminDashboard)/cards/property-card";
 import PaginationSection from "@/components/shared/PaginationSection";
 import PropertyCardSkeleton from "@/components/shared/skeleton/PropertyCardSkeleton";
 import Empty from "@/components/ui/empty-data";
@@ -35,13 +35,13 @@ export default function SellerListing({
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  xl:gap-6 gap-4">
-        {/* {listingData?.data?.map((property, index) => (
+        {listingData?.data?.map((property, index) => (
           <PropertyCard
             key={index}
             {...property}
             isPropertyStatusVisible={true}
           />
-        ))} */}
+        ))}
       </div>
       <PaginationSection
         total={listingData?.meta?.total}
