@@ -19,6 +19,9 @@ import { useAppDispatch } from "@/redux/hooks";
 import { logout } from "@/redux/features/authSlice";
 import { useRouter } from "next/navigation";
 import { useGetMyProfileQuery } from "@/redux/api/profileApi";
+import { useGetNotificationQuery } from "@/redux/api/notificationApi";
+import { useEffect, useState } from "react";
+import { INotification } from "../(adminDashboard)/Notifications/NotificationContainer";
 
 type TNavbarProps = {
   collapsed: boolean;
@@ -28,9 +31,20 @@ type TNavbarProps = {
 const Navbar = ({ collapsed, setCollapsed }: TNavbarProps) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const [isUnread, setIsUnread] = useState(false);
   const { data, isLoading } = useGetMyProfileQuery(undefined);
+  const { data: notificationData } = useGetNotificationQuery(undefined);
 
-  console.log(data?.data);
+  useEffect(() => {
+    if (notificationData) {
+      const isUnreadNotification = notificationData?.data?.some(
+        (notification: INotification) => notification.read === false,
+      );
+      setIsUnread(isUnreadNotification);
+    }
+  }, [notificationData]);
+
+  console.log(isUnread);
   return (
     <div className="flex items-center justify-between w-[97%]">
       {/* Header left side */}
@@ -66,19 +80,9 @@ const Navbar = ({ collapsed, setCollapsed }: TNavbarProps) => {
         <Link href={"/notifications"}>
           <div className="flex justify-center items-center size-12  rounded-2xl cursor-pointer relative border ">
             <IoNotificationsOutline size={24} color="#545454" />
-
-            <Badge
-              count={1}
-              style={{
-                border: "none",
-                boxShadow: "none",
-                backgroundColor: "var(--color-main)",
-                color: "#fff",
-                position: "absolute",
-                top: "-24px",
-                right: "-8px",
-              }}
-            ></Badge>
+            {isUnread && (
+              <div className="absolute top-1.5 right-2.5 w-3 h-3 bg-red-500 rounded-full"></div>
+            )}
           </div>
         </Link>
 

@@ -1,29 +1,37 @@
-"use client";;
+"use client";
 import moment from "moment";
-import { Bell, Trash2 } from "lucide-react";
+import { Bell } from "lucide-react";
+import {
+  useGetNotificationQuery,
+  useReadNotificationMutation,
+} from "@/redux/api/notificationApi";
+import PaginationSection from "@/components/shared/PaginationSection";
+import { useSearchParams } from "next/navigation";
+import NotificationListSkeleton from "./NotificationListSkeleton";
+import Empty from "@/components/ui/empty-data";
+import { useEffect } from "react";
+import Link from "next/link";
 
-const notificationData = [
-  {
-    message:
-      "Driver verification request",
-    description: "The Karan is request for a driver verification approval.",
-    time: " Mon jun 01 2026 22:00:00 GMT+0000",
-  },
-  {
-    message: "Help & Support",
-    description: "The user send a support request, please see and review the request.",
-    time: "Tue jun 02 2026 22:00:00 GMT+0000",
-  },
-  {
-    message: "Commission deduction",
-    description: "Commission percantage is updated now",
-    time: "Tue jun 02 2026 22:00:00 GMT+0000",
-  },
-];
+export interface INotification {
+  _id: string;
+  message: string;
+  description: string;
+  read: boolean;
+  link: string;
+  createdAt: string;
+}
 
 const NotificationContainer = () => {
+  const page = useSearchParams().get("page") || "1";
+  const limit = useSearchParams().get("limit") || "10";
 
+  const queries: Record<string, string | number> = { page, limit };
+  const { data, isLoading } = useGetNotificationQuery(queries);
+  const [makeRedNotification] = useReadNotificationMutation();
 
+  useEffect(() => {
+    makeRedNotification({});
+  }, []);
 
   return (
     <div>
@@ -31,44 +39,54 @@ const NotificationContainer = () => {
         <h1 className="text-2xl text-text-color  mb-2">Notifications</h1>
         <hr />
 
-        {/* yesterday notification  */}
-        <div className="xl:mt-8 mt-6 xl:px-10 px-6 text-text-color">
-          {/* showing today notification */}
-          <div className="space-y-5">
-            {notificationData?.map((notification, index) => (
-              <div className="flex items-center gap-x-4">
-                <div className="bg-main-color size-10 flex justify-center items-center rounded-full cursor-pointer">
-                  <Bell color="white" />
-                </div>
-                <div
-                  key={index}
-                  className="bg-white border border-gray-400 rounded-lg p-3 flex-1"
-                >
-                  <div className="flex justify-between gap-x-2 items-center">
-                    <h5 className="font-medium text-xl">
-                      {notification?.message}
-                    </h5>
-                    <p>{moment(notification?.time).fromNow()}</p>
-                  </div>
-                  <p className="text-gray-500">{notification?.description}</p>
-                </div>
-              </div>
-            ))}
+        {data?.meta?.total === 0 && !isLoading && (
+          <Empty message="No notification found" className="mt-10" />
+        )}
+
+        {/* notification list */}
+        {data?.meta?.total !== 0 && isLoading ? (
+          <div className="xl:mt-8 mt-6 xl:px-10 px-6 text-text-color">
+            <NotificationListSkeleton />
           </div>
-        </div>
+        ) : (
+          <div className="xl:mt-8 mt-6 xl:px-10 px-6 text-text-color">
+            {/* showing today notification */}
+            <div className="space-y-5">
+              {data?.data?.map((notification: INotification) => (
+                <Link
+                  key={notification?._id}
+                  href={notification?.link ? `${notification?.link}` : `#`}
+                  className="block"
+                >
+                  <div className="flex items-center gap-x-4">
+                    <div className="bg-main-color size-10 flex justify-center items-center rounded-full cursor-pointer">
+                      <Bell color="white" />
+                    </div>
 
-
+                    <div className="bg-white border border-gray-400 rounded-lg p-3 flex-1">
+                      <div className="flex justify-between gap-x-2 items-center">
+                        <h5 className="font-medium md:text-lg">
+                          {notification?.message}
+                        </h5>
+                        <p>{moment(notification?.createdAt).fromNow()}</p>
+                      </div>
+                      <p className="text-gray-500">
+                        {notification?.description}
+                      </p>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
       {/* pagination */}
-      {/* <div className="w-max mt-3 ml-auto">
-        <Pagination
-          current={currentPage}
-          pageSize={pageSize}
-          total={notificationData.length}
-          onChange={(page) => setCurrentPage(page)}
-          showSizeChanger={false} // Disable page size changer if unnecessary
-        />
-      </div> */}
+      <PaginationSection
+        total={data?.meta?.total}
+        current={Number(page)}
+        pageSize={Number(limit)}
+      />
     </div>
   );
 };

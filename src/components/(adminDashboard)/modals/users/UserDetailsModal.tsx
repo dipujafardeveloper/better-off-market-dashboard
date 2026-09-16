@@ -1,5 +1,6 @@
 "use client";
 import ReadMoreText from "@/components/shared/ReadMoreText";
+import { Button } from "@/components/ui/button";
 import { IUser } from "@/types";
 import { getInitials } from "@/utils/getInitials";
 import { Image, Modal, Tag } from "antd";
@@ -130,6 +131,12 @@ export function UserDetailsModal({
           </div>
         ))}
       </div>
+
+      <Link href={`/seller-profile?seller=${selectedUser?._id}`}>
+        <Button className="mt-4 w-full bg-main-color hover:bg-main-color/70">
+          View Seller Profile
+        </Button>
+      </Link>
     </Modal>
   );
 }
