@@ -1,7 +1,6 @@
 "use client";
-import { Avatar, Badge, Flex, Skeleton } from "antd";
+import { Avatar, Flex, Skeleton } from "antd";
 import { IoNotificationsOutline } from "react-icons/io5";
-import avatarImg from "@/assets/image/profile.png";
 
 import Link from "next/link";
 import { ChevronRight, X } from "lucide-react";

@@ -11,6 +11,7 @@ import NotificationListSkeleton from "./NotificationListSkeleton";
 import Empty from "@/components/ui/empty-data";
 import { useEffect } from "react";
 import Link from "next/link";
+import { Tooltip } from "antd";
 
 export interface INotification {
   _id: string;
@@ -68,7 +69,10 @@ const NotificationContainer = () => {
                         <h5 className="font-medium md:text-lg">
                           {notification?.message}
                         </h5>
-                        <p>{moment(notification?.createdAt).fromNow()}</p>
+                        <Tooltip placement="topRight" title={moment(notification?.createdAt).format("llll")}>
+                           <p>{moment(notification?.createdAt).fromNow()}</p>
+                        </Tooltip>
+                       
                       </div>
                       <p className="text-gray-500">
                         {notification?.description}
