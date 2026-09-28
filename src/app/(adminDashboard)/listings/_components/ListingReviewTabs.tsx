@@ -8,6 +8,7 @@ import PaginationSection from "@/components/shared/PaginationSection";
 import { useUpdateSearchParams } from "@/hooks/useUpdateSearchParams";
 import { useSearchParams } from "next/navigation";
 import { mapPropertyToListingItem } from "./mapPropertyToListingItem";
+import { ListingQueueSkeleton } from "./ListingQueueSkeleton";
 
 const tabs = ["Pending", "Active", "Rejected", "Sold", "Under Contract"];
 
@@ -17,7 +18,7 @@ export function ListingReviewTabs() {
   const page = useSearchParams().get("page") || "1";
   const limit = useSearchParams().get("limit") || "10";
 
-  const { data, isLoading } = useGetPropertiesQuery({
+  const { data, isLoading, isFetching } = useGetPropertiesQuery({
     status: activeKey,
     page,
     limit,
@@ -41,15 +42,19 @@ export function ListingReviewTabs() {
           key: tab,
           label: (
             <span className="text-sm font-medium">
-              {tab} ({data?.data?.statusCounts?.[tab as keyof typeof data.data.statusCounts] || 0})
+              {tab} (
+              {data?.data?.statusCounts?.[
+                tab as keyof typeof data.data.statusCounts
+              ] || 0}
+              )
             </span>
           ),
         }))}
         className="[&_.ant-tabs-nav]:!mb-6 [&_.ant-tabs-tab]:px-1 [&_.ant-tabs-tab-active_.ant-tabs-tab-btn]:!text-primary-blue [&_.ant-tabs-ink-bar]:!bg-primary-blue"
       />
 
-      {isLoading ? (
-        <p className="py-16 text-center text-sm text-gray-400">Loading...</p>
+      {isLoading || isFetching ? (
+        <ListingQueueSkeleton />
       ) : (
         <ListingQueue
           status={activeKey}
