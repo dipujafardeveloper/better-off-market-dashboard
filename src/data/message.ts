@@ -26,24 +26,3 @@ export const mockConversations: Conversation[] = [
   },
 ];
 
-export const mockThreads: Record<string, ChatThread> = {
-  "1": {
-    contact: {
-      id: "1",
-      buyerName: "James R.",
-      sellerName: "James B.",
-      initials: "JR",
-      avatarColor: "bg-indigo-100 text-indigo-700",
-      propertyType: "3bd house",
-      city: "Memphis",
-      county: "Hamilton County",
-    },
-    dateLabel: "JUNE 14, 2024",
-    messages: [
-      { id: "m1", sender: "me", content: "Hi James, is the price negotiable?", time: "10:22 AM" },
-      { id: "m2", sender: "them", content: "Yes, some flexibility. What are you thinking?", time: "10:45 AM" },
-      { id: "m3", sender: "me", content: "I submitted $46,000 — hoping we can work it out.", time: "11:02 AM" },
-      { id: "m4", sender: "them", content: "Thanks, I'll review it shortly.", time: "2:30 PM" },
-    ],
-  },
-};
