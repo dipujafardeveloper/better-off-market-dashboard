@@ -5,6 +5,7 @@ const nextConfig = {
       "picsum.photos",
       "nazmulhasan.s3.us-east-1.amazonaws.com",
       "your-bucket.s3.amazonaws.com",
+      "batter-off-market-storage.nyc3.digitaloceanspaces.com"
     ],
   },
 };
