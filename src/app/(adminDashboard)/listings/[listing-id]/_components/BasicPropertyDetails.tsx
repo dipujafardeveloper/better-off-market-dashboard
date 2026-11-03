@@ -10,6 +10,9 @@ interface PropertyListingProps {
   property: IPropertyResponse;
 }
 
+
+
+
 export function BasicPropertyDetails({ property }: PropertyListingProps) {
   const propertySpecs = handlePropertiesSpecifications(
     property?.propertyType,
@@ -41,7 +44,7 @@ export function BasicPropertyDetails({ property }: PropertyListingProps) {
                   statusColor[property?.status],
                 )}
               >
-                {property?.status}
+                {property?.status === "Pending" ? "Pending Review" : property?.status}
               </span>
             </div>
           }

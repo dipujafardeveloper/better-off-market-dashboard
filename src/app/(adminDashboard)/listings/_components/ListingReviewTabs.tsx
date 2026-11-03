@@ -42,7 +42,7 @@ export function ListingReviewTabs() {
           key: tab,
           label: (
             <span className="text-sm font-medium">
-              {tab} (
+              {tab === "Pending" ? "Pending Review" : tab}{" "} (
               {data?.data?.statusCounts?.[
                 tab as keyof typeof data.data.statusCounts
               ] || 0}
